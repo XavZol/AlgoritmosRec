@@ -1,40 +1,29 @@
 /*Ejemplo:
-Dado un numero natural N, obtener la suma de los dígitos de que consta. Presentar un algoritmo recursivo y otro iterativo.
+Algoritmo recursivo para resolver las torres de Hanoi
 */
 #include<iostream>
 using namespace std;
 
-//Suma recursiva
-int sumaRecursiva(int n){
-    if(n<9){ //caso base
-        return n;
+void hanoi(char varinicial, char varcentral, char varfinal, int n){
+    if(n==1){
+        cout<<"Mover disco "<<n<<"desde varilla "<<varinicial<<" a varilla "<<varfinal<<endl;
     }
-    else { //caso recursivo 12 3
-        return sumaRecursiva(n/10) + n%10;
+    else{
+        hanoi(varinicial, varfinal, varcentral, n-1);
+        cout<<"Mover disco "<<n<<"desde varilla"<<varinicial<<" a varilla "<<varfinal<<endl;
+        hanoi(varcentral, varinicial, varfinal, n-1);
     }
-}
-
-//Solucion iterativa
-int sumaIterativa(int n){
-    int suma = 0;
-
-    while(n > 9){
-        suma += n%10;
-        n /= 10;
-    }
-
-    return (suma + n);
 }
 
 int main(){
-    int numero;
 
-    cout<<"Digite un numero: "<<endl;
-    cin>>numero;
+    cout<<"Ingrese el numero de discos: ";
+    int n;
+    cin>>n;
 
-    cout<<"\nLa suma de los digitos del numero es: "<<endl;
-    cout<<"Algoritmo recursivo: "<<sumaRecursiva(numero)<<endl;
-    cout<<"Algoritmo iterativo: "<<sumaIterativa(numero)<<endl;
-    
+    hanoi('A', 'B', 'C', n);
+    cout<<endl;
+    cout<<"Fin del programa"<<endl;
+
     return 0;
 }
