@@ -1,71 +1,76 @@
-/*Ejemplo:
-Algoritmo MergeSort
-*/
-#include<iostream>
+/*Salto del Caballo */
+#include <iostream>
+#include <conio.h>
 using namespace std;
-void  mezcla(int a[], int izquierda, int medio, int derecha){
-	int *aux; 
-	int i,k,z;
-	
-	aux= new int[derecha-izquierda +1];
-	i = z = izquierda;
-	k= medio +1;
-	
-	while(i<=medio && k<=derecha){ //bucle para la mezcla, utiliza aux[] como arreglo auxiliar 
-		if(a[i]<=a[k]){
-			aux[z++] = a[i++];
-		}
-		else{
-			aux[z++] = a[k++];
-		}
-	}
-	
-	while(i<=medio){  //Se mueven elementos no mezclados de sublistas
-		aux[z++] =a[i++];
-	}
-	
-	while(k<=derecha){
-		aux[z++] = a[k++];
-	}
 
-    for(int i=izquierda; i<=derecha; i++){ //Copia de elementos de aux[] hacia a[]
-        a[i] = aux[i];
+const int N = 8;
+int tablero[N][N];
+
+//Desplazamientos relativos del caballo
+int d[8][2] = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
+
+void escribirTablero(){
+    int i, j;
+
+    for(i=0;i<N;i++){
+        for(j=0;j<N;j++){
+            cout<<tablero[i][j]<<"|";
+        }
+        cout<<endl;
     }
-
-    delete [] aux;
 }
-void mergesort(int a[], int primero, int ultimo){
-    int central;
 
-    if(primero < ultimo){
-        central = (primero+ultimo)/2;
-        mergesort(a,primero,central); //ordena primera mitad de la lista
-        mergesort(a, central+1, ultimo); //Ordenamos segunda mitad de la lista
-        mezcla(a, primero, central, ultimo); //fusiona las dos sublistas ordenadas, delimitadas por los extremos.
+void saltoCaballo(int i, int x, int y, bool &exito)
+{
+    int nx, ny;
+    int k = 0; // inicializa contador de posibles 8 movimientos
+    exito = false;
+
+    do
+    {
+        k++;
+        nx = x + d[k - 1][0];
+        ny = y + d[k - 1][1];
+
+        // Determina si nuevas coordenadas son aceptables
+        if ((nx >= 0) && (nx < N) && (ny >= 0) && (ny < N) && (tablero[nx][ny] == 0))
+        {
+            // Anota moviemiento
+            tablero[nx][ny] = i;
+            escribirTablero(); // funcion para mostrar el tablero (matriz)
+
+            if (i < N * N)
+            {
+                saltoCaballo(i + 1, nx, ny, exito);
+
+                if (!exito)
+                {
+                    tablero[nx][ny] = 0; // no se alcanzo la solucion, se borra anotacion
+                }
+            }
+            else
+            {
+                exito = true; // caballo a cubierto el tablero
+            }
+        }
+    } while ((k < 8) && !exito);
+}
+int main(){
+    bool exito;
+    int fila=1;
+    int columna=0;
+
+    tablero[fila][columna] = 1;
+
+    saltoCaballo(2, fila, columna, exito);
+
+    if(exito){ //Si exito es verdadero, hemos encontrado un camino
+        cout<<"Camino encontrado"<<endl; 
+        escribirTablero();
     }
     else{
-        return;
+        cout<<"No hay camino"<<endl;
     }
 
-}
-
-int main(){
-    cout<<"Ejemplo de algoritmo MergeSort"<<endl;
-    int a[] = {5, 3, 4, 1, 2};
-
-    cout<<"Lista original: "<<endl;
-
-    for(int i=0; i<5; i++){
-        cout<<a[i]<<" ";
-    }
-
-    cout<<"\nLista ordenada: "<<endl;
-    mergesort(a, 0, 4);
-    for(int i=0; i<5; i++){
-        cout<<a[i]<<" ";
-    }
-
-    cout<<endl;
-    
     return 0;
 }
