@@ -1,29 +1,48 @@
 /*Ejemplo:
-Algoritmo recursivo para resolver las torres de Hanoi
+Algoritmo recursivo de la búsqueda binaria
 */
 #include<iostream>
 using namespace std;
 
-void hanoi(char varinicial, char varcentral, char varfinal, int n){
-    if(n==1){
-        cout<<"Mover disco "<<n<<"desde varilla "<<varinicial<<" a varilla "<<varfinal<<endl;
+int busquedaBinaria(int a[], int dato, int inferior, int superior){
+    int mitad;
+
+    if(inferior > superior){ //No encontrado
+        return-1;
     }
-    else{
-        hanoi(varinicial, varfinal, varcentral, n-1);
-        cout<<"Mover disco "<<n<<"desde varilla"<<varinicial<<" a varilla "<<varfinal<<endl;
-        hanoi(varcentral, varinicial, varfinal, n-1);
+    else{ 
+        mitad = (inferior + superior) / 2;
+        if(dato == a[mitad]){ //Caso base
+            return mitad;
+        }
+        else if(dato > a[mitad]){ //Casosrecursivos
+            return busquedaBinaria(a, dato, mitad + 1, superior);
+        }
+        else{
+            return busquedaBinaria(a, dato, inferior, mitad - 1);
+        }
     }
 }
 
 int main(){
+    cout<<"Busqueda binaria"<<endl;
+    cout<<"----------------"<<endl;
+    cout<<"Arreglo: "<<endl;
+    int a[] = {1, 3, 4, 5, 7, 6};
+    int dato = 8;
+    int inferior = 0;
+    int superior = 5;
+    int indice = busquedaBinaria(a, dato, inferior, superior);
 
-    cout<<"Ingrese el numero de discos: ";
-    int n;
-    cin>>n;
+    if(indice != -1){
+        cout<<"El numero "<<dato<<" se encuentra en la posicion: "<<indice<<endl;
+    }
 
-    hanoi('A', 'B', 'C', n);
+    else{
+        cout<<"El numero "<<dato<<" no se encuentra en el arreglo"<<endl;
+    }
+
     cout<<endl;
-    cout<<"Fin del programa"<<endl;
-
+    
     return 0;
 }
