@@ -1,45 +1,68 @@
 /*Ejemplo:
-Algoritmo recursivo de la búsqueda binaria
+Algoritmo MergeSort
 */
 #include<iostream>
 using namespace std;
+void  mezcla(int a[], int izquierda, int medio, int derecha){
+	int *aux; 
+	int i,k,z;
+	
+	aux= new int[derecha-izquierda +1];
+	i = z = izquierda;
+	k= medio +1;
+	
+	while(i<=medio && k<=derecha){ //bucle para la mezcla, utiliza aux[] como arreglo auxiliar 
+		if(a[i]<=a[k]){
+			aux[z++] = a[i++];
+		}
+		else{
+			aux[z++] = a[k++];
+		}
+	}
+	
+	while(i<=medio){  //Se mueven elementos no mezclados de sublistas
+		aux[z++] =a[i++];
+	}
+	
+	while(k<=derecha){
+		aux[z++] = a[k++];
+	}
 
-int busquedaBinaria(int a[], int dato, int inferior, int superior){
-    int mitad;
+    for(int i=izquierda; i<=derecha; i++){ //Copia de elementos de aux[] hacia a[]
+        a[i] = aux[i];
+    }
 
-    if(inferior > superior){ //No encontrado
-        return-1;
+    delete [] aux;
+}
+void mergesort(int a[], int primero, int ultimo){
+    int central;
+
+    if(primero < ultimo){
+        central = (primero+ultimo)/2;
+        mergesort(a,primero,central); //ordena primera mitad de la lista
+        mergesort(a, central+1, ultimo); //Ordenamos segunda mitad de la lista
+        mezcla(a, primero, central, ultimo); //fusiona las dos sublistas ordenadas, delimitadas por los extremos.
     }
-    else{ 
-        mitad = (inferior + superior) / 2;
-        if(dato == a[mitad]){ //Caso base
-            return mitad;
-        }
-        else if(dato > a[mitad]){ //Casosrecursivos
-            return busquedaBinaria(a, dato, mitad + 1, superior);
-        }
-        else{
-            return busquedaBinaria(a, dato, inferior, mitad - 1);
-        }
+    else{
+        return;
     }
+
 }
 
 int main(){
-    cout<<"Busqueda binaria"<<endl;
-    cout<<"----------------"<<endl;
-    cout<<"Arreglo: "<<endl;
-    int a[] = {1, 3, 4, 5, 7, 6};
-    int dato = 8;
-    int inferior = 0;
-    int superior = 5;
-    int indice = busquedaBinaria(a, dato, inferior, superior);
+    cout<<"Ejemplo de algoritmo MergeSort"<<endl;
+    int a[] = {5, 3, 4, 1, 2};
 
-    if(indice != -1){
-        cout<<"El numero "<<dato<<" se encuentra en la posicion: "<<indice<<endl;
+    cout<<"Lista original: "<<endl;
+
+    for(int i=0; i<5; i++){
+        cout<<a[i]<<" ";
     }
 
-    else{
-        cout<<"El numero "<<dato<<" no se encuentra en el arreglo"<<endl;
+    cout<<"\nLista ordenada: "<<endl;
+    mergesort(a, 0, 4);
+    for(int i=0; i<5; i++){
+        cout<<a[i]<<" ";
     }
 
     cout<<endl;
